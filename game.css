@@ -1,0 +1,170 @@
+.trees {
+  background-image: url('./assets/trees.png');
+  background-size: auto 100%;
+  background-position: center;
+  background-repeat: repeat-x;
+  height: 25%;
+  width: 100%;
+}
+.flowers {
+  background-image: url('./assets/flowers.png');
+  background-size: auto 100%;
+  background-position: center;
+  background-repeat: repeat-x;
+  height: 5%;
+  width: 100%;
+}
+.paths {
+  display: flex;
+  justify-content: space-between;
+  align-items: space-between;
+  flex-wrap: wrap;
+  margin: 0 0;
+  width: 100%;
+  flex: 1;
+  margin-top: auto;
+  position: relative;
+  gap: 50px;
+}
+.paths::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('./assets/bg2.png');
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.3;
+  z-index: 0;
+}
+
+.path {
+  background-image: url('./assets/path.png');
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  /* height: 80px; */
+  width: 100%;
+  padding-left: 250px;
+  z-index: 10;
+}
+.path > div {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+.vehicle {
+  position: absolute;
+
+  width: 250px;
+  bottom: 15px;
+  right: 0%;
+  transition: right ease;
+}
+
+
+.shake {
+  animation: shake 0.2s infinite linear;
+}
+@keyframes shake {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+  100% {
+    transform: translateY(2px);
+  }
+}
+
+
+.carAnimation {
+  animation: carAnimation ease-in-out;
+}
+@keyframes carAnimation {
+  0% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-2px);
+  }
+  60% {
+    transform: translateY(1px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.busAnimation {
+  animation: shake infinite linear;
+  animation-duration: 0.2s !important;
+}
+@keyframes busAnimation {
+  0% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-4px);
+  }
+  70% {
+    transform: translateY(2px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.truckAnimation {
+  animation: truckAnimation linear infinite;
+  animation-duration: 1.5s !important;
+}
+@keyframes truckAnimation {
+  0% {
+    transform: translateY(0);
+  }
+  10% {
+    transform: translateY(-12px);
+  }
+  30% {
+    transform: translateY(8px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+  70% {
+    transform: translateY(4px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+
+.motorcycleAnimation {
+  animation: motorcycleAnimation linear
+}
+@keyframes motorcycleAnimation {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  15% {
+    transform: translateY(-120px) rotate(20deg); /* זינוק גבוה עם הטיה למעלה */
+  }
+  40% {
+    transform: translateY(-80px) rotate(10deg); /* עדיין באוויר, מתאזן */
+  }
+  60% {
+    transform: translateY(-30px) rotate(5deg); /* לקראת נחיתה */
+  }
+  80% {
+    transform: translateY(5px) rotate(-2deg); /* נחיתה הדרגתית */
+  }
+  100% {
+    transform: translateY(0) rotate(0deg); /* נחיתה מלאה */
+  }
+}
