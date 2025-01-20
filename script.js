@@ -12,7 +12,8 @@ const HAS_BG_MUSIC = true;
 // ====== CONSTANTS =====================================================
 
 const DELAY_AFTER_STEP_BEFORE_BUTTON_APPEAR = 2000;
-const ANIMATION_BEFORE_MOVE_DURATION = 6000;
+const ANIMATION_BEFORE_MOVE_DURATION = 5000;
+const REMOVE_STUCKED_VEHICLE = false;
 
 let isGameStarted = false;
 let isGameOver = false;
@@ -239,9 +240,22 @@ async function updateVehiclePosition(vehicle) {
   img.style.transitionDuration = `${speed}s`;
   img.style.right = `${finalRightPosition}px`;
 
-  await animateVehicle(img, vehicle, speed, false, vehicle.position > 0);
+  await animateVehicle(img, vehicle, speed, false, vehicle.position > 0 && !vehicle.stucked);
   if (vehicle.stucked) {
-    playGameSound('horn');
+    stuckVehicle(vehicle);
+  }
+}
+
+async function stuckVehicle(vehicle) {
+  const img = document.getElementById(`vehicle-${vehicle.id}`);
+
+  img.classList.add('vehicleCollision');
+  await delay(500);
+  playGameSound('horn', true, true);
+  await delay(4000);
+  img.classList.remove('vehicleCollision');
+  if (REMOVE_STUCKED_VEHICLE) {
+    animateVehicle(img, vehicle, speed, true, false);
   }
 }
 
@@ -275,9 +289,9 @@ async function animateVehicle(element, vehicle, speed = 1, infinite = false, nee
 
   await delay(speed * 1000);
   element.classList.remove('carAnimation', 'truckAnimation', 'busAnimation', 'motorcycleAnimation', 'motorcycleAnimation2');
-  if (infinite || vehicle.stucked) {
+  if (infinite) {
     setTimeout(() => {
-      animateVehicle(element, vehicle, speed, infinite);
+      animateVehicle(element, vehicle, speed, true);
     }, vehicle.stucked ? 0 : 1000);
   }
 }
@@ -370,7 +384,7 @@ async function showTaskCard() {
   const textAnimationDuration = task.split(' ').length * 300 + 800;
   // vehicles
   vehiclesContainer.innerHTML = '';
-  vehicles.forEach(async vehicle => {
+  vehicles.filter(v => !REMOVE_STUCKED_VEHICLE || !v.stucked).forEach(async vehicle => {
     const img = document.createElement('img');
     img.classList.add('vehicle-button')
     img.src = vehicle.image;
@@ -399,8 +413,7 @@ async function showTaskCard() {
 
 async function handleVehicleClick(vehicle) {
   if (vehicle.stucked) {
-    playGameSound('horn', true, true);
-    await moveVehicle(vehicle.id);
+    await stuckVehicle(vehicle);
     showElement(START_BUTTON());
     resetBgVolume();
     return;
