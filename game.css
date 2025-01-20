@@ -273,7 +273,7 @@
 }
 
 /* ============= TASK */
-#task-modal .modal-content {
+#task-modal .modal-content, #winnerModal .modal-content {
   width: 70% !important;
   display: flex;
   flex-direction: column;
@@ -378,4 +378,74 @@
   height: 80%;
   position: absolute;
   bottom: 20px;
+}
+
+/* ------------- win */
+.vehicleDance {
+  animation: vehicleDance 1.5s ease-in-out infinite;
+}
+
+@keyframes vehicleDance {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-10px) rotate(-5deg);
+  }
+  50% {
+    transform: translateY(0) rotate(5deg);
+  }
+  75% {
+    transform: translateY(10px) rotate(-5deg);
+  }
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+}
+
+#winnerModal .modal-content {
+  height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#winnerModal .vehicle-image {
+  width: 240px;
+  margin-bottom: 20px;
+}
+
+#winnerModal .winner-text {
+  font-size: 4rem;
+  font-weight: bold;
+  color: #FF5733;
+  animation: textFlash 1.5s ease-in-out infinite;
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes textFlash {
+  0%, 100% {
+    color: #FF5733;
+  }
+  50% {
+    color: #FFC300;
+  }
+}
+
+
+.winner-text {
+  font-size: 30px;
 }

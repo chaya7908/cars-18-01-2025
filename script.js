@@ -39,27 +39,29 @@ const obstacles = vehicles.map(vehicle => {
 });
 
 const tasks = [
-  "מצאו 5 פריטים בצבע אדום תוך 2 דקות.",
-  "פתרו חידת היגיון תוך 5 דקות.",
-  "סדרו 10 כוסות חד פעמיות בצורת פירמידה ב-30 שניות.",
-  "זכרו וחיזרו על סדרת מספרים ארוכה ככל האפשר.",
-  "המציאו שיר קצר על הקבוצה שלכם והציגו אותו.",
-  "זהו כמה שיותר שירים לפי 10 שניות מהפזמון שלהם.",
-  "רשמו 10 בעלי חיים שמתחילים באות מסוימת.",
-  "ענו על שאלת טריוויה שקשורה למקום התחרות.",
-  "הכינו פסל קטן מבלונים או מחומרים זמינים במקום.",
-  "ציירו תמונה משותפת של נושא מסוים, כשכל חבר בתורו מצייר פרט.",
-  "מצאו שלושה פריטים שמתחילים באותה אות והביאו אותם.",
-  "הכינו רשימה של 10 מדינות וציינו מאכל לאומי לכל מדינה.",
-  "בנו מגדל מקשיות שתייה שיחזיק לפחות 10 שניות.",
-  "פתרו תשבץ מיוחד שקשור לתחרות.",
-  "ענו על כמה שיותר שאלות מתוך חידון זריז של דקה.",
-  "הכינו ריקוד קצר ובצעו אותו מול כולם.",
-  "זהו 5 חפצים מתוך שקית מבלי להוציא אותם, רק באמצעות מישוש.",
-  "מצאו שם חיבה מצחיק לכל אחד מחברי הקבוצה.",
-  "בנו סיפור קצר על נושא אקראי תוך שימוש ב-10 מילים נתונות מראש.",
-  "כתבו ובצעו פרסומת קצרה למוצר דמיוני שאתם ממציאים."
-];
+  "כאן טקסט למשימה מספר 1",
+  "כאן טקסט למשימה מספר 2",
+  "כאן טקסט למשימה מספר 3",
+  "כאן טקסט למשימה מספר 4",
+  "כאן טקסט למשימה מספר 5",
+  "כאן טקסט למשימה מספר 6",
+  "כאן טקסט למשימה מספר 7",
+  "כאן טקסט למשימה מספר 8",
+  "כאן טקסט למשימה מספר 9",
+  "כאן טקסט למשימה מספר 10",
+  "כאן טקסט למשימה מספר 11",
+  "כאן טקסט למשימה מספר 12",
+  "כאן טקסט למשימה מספר 13",
+  "כאן טקסט למשימה מספר 14",
+  "כאן טקסט למשימה מספר 15",
+  "כאן טקסט למשימה מספר 16",
+  "כאן טקסט למשימה מספר 17",
+  "כאן טקסט למשימה מספר 18",
+  "כאן טקסט למשימה מספר 19",
+  "כאן טקסט למשימה מספר 20",
+  "כאן טקסט למשימה מספר 21",
+  "כאן טקסט למשימה מספר 22",
+].reverse();
 
 let firstChoosenCard = null;
 let canClick = true;
@@ -70,6 +72,7 @@ const gameSounds = [];
 // ------------------------- SELECTORS -------------------------
 const START_BUTTON = () => document.getElementById('task-button');
 const TASK_MODAL = () => document.getElementById('task-modal');
+const WINNER_MODAL = () => document.getElementById('winnerModal');
 
 // ------------------------- BUILD GAME BOARD -------------------------
 async function initStartContainer() {
@@ -327,20 +330,19 @@ async function moveVehicle(vehicleId) {
   }
 }
 
-async function gameOver() {
-  isGameOver = true;
-  const gameOverBoard = document.querySelector('.game-over-container');
-  gameOverBoard.style.display = 'block';
-  const text = gameOverBoard.querySelector('.text-2');
-  playGameSound('game-over');
+async function showWinner(vehicle) {
+  playGameSound('claps')
+  const winnerImage = document.getElementById('winnerImage');
 
-  await delay(500);
-  animateBrush({ element: text, color: 'red', duration: 3, playSound: false });
-  setInterval(() => {
-    playGameSound('game-over');
-    lowerBgVolume(0.5);
-    animateBrush({ element: text, color: 'red', duration: 3, playSound: false });
-  }, 4000);
+  winnerImage.src = vehicle.image;
+  winnerImage.classList.add('vehicleDance');
+
+  const vehicleElement = document.getElementById(`vehicle-${vehicle.id}`);
+  vehicleElement.classList.add('vehicleDance');
+
+  await delay(4000);
+  vehicleElement.classList.remove('vehicleDance');
+  WINNER_MODAL().classList.add('active');
 }
 
 // ------------------------- LOGIC ------------------------------------
@@ -409,6 +411,7 @@ async function showTaskCard() {
 
   await delay(textAnimationDuration);
   taskText.classList.add('flash');
+  resetBgVolume();
 }
 
 async function handleVehicleClick(vehicle) {
@@ -441,6 +444,10 @@ async function handleVehicleClick(vehicle) {
   vehicleElement.style.transition = "";
   playGameSound('car-pass-by');
   await moveVehicle(vehicle.id);
+  if (vehicle.position >= vehicle.steps) {
+    showWinner(vehicle);
+  }
+  
   await delay(DELAY_AFTER_STEP_BEFORE_BUTTON_APPEAR);
   showElement(START_BUTTON());
   resetBgVolume();
@@ -602,23 +609,6 @@ function baseLayout() {
   }
 }
 
-async function fallLetters(element, text) {
-  element.innerHTML = ''; // נקה את התוכן הקודם
-  // פצל את המשפט למילים
-  for (const word of text.split(' ')) {
-    const span = document.createElement('span');
-    span.textContent = word;
-  
-    span.style.display = 'inline-block'; // מאפשר אנימציות על המילה
-    span.style.opacity = 0; // הסתר את המילה בהתחלה
-    span.style.animation = `
-      fall 0.8s 0.3s ease-out forwards
-    `;
-    element.appendChild(span);
-    await delay(800);
-  }
-}
-
 function animateElement(element) {
   element.classList.add('animated');
 }
@@ -642,4 +632,4 @@ initializeGame();
 
 document.addEventListener('click', () => {
   initGameAfterClick();
-})
+});
