@@ -5,6 +5,9 @@
   background-repeat: repeat-x;
   height: 25%;
   width: 100%;
+  display: flex;
+  /* align-items: center; */
+  justify-content: center;
 }
 .flowers {
   background-image: url('./assets/flowers.png');
@@ -46,9 +49,7 @@
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
-  /* height: 80px; */
   width: 100%;
-  padding-left: 250px;
   z-index: 10;
 }
 .path > div {
@@ -58,11 +59,58 @@
 }
 .vehicle {
   position: absolute;
-
+  z-index: 1000;
   width: 250px;
   bottom: 15px;
   right: 0%;
   transition: right ease;
+}
+.vehicle-img {
+  width: 100%;
+}
+.vehicle-logo {
+  width: 54px;
+  background-image: url(./assets/logo.png);
+  position: absolute;
+  left: -15px;
+  top: -15px;
+  transform: scale(0);
+  opacity: 0; 
+  background: white;
+  padding: 2px;
+  border-radius: 12px;
+  box-shadow: 0px 0px 15px 14px rgb(255 255 255), 0 4px 6px -4px rgb(255 255 255);
+}
+.vehicle-logo img {
+  width: 100%;
+}
+@keyframes spinAndFade {
+  0% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  30% {
+    transform: scale(2) rotate(540deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.2) rotate(1440deg); /* שני סיבובים מלאים עם חזרה */
+    opacity: 1;
+  }
+}
+@keyframes flash1 {
+  0%, 100% {
+    opacity: 0;
+  }
+  25%, 75% {
+    opacity: 1; /* יותר הבהובים */
+  }
+}
+.vehicle-logo.spin {
+  animation: spinAndFade 1.5s ease-in-out forwards; /* זמן קצר יותר */
+}
+.vehicle-logo.flash {
+  animation: flash1 0.6s ease-in-out 0.8s forwards; /* קצת יותר קצבי */
 }
 
 
@@ -167,4 +215,136 @@
   100% {
     transform: translateY(0) rotate(0deg); /* נחיתה מלאה */
   }
+}
+
+.motorcycleAnimation2 {
+  animation: motorcycleAnimation2 linear
+}
+@keyframes motorcycleAnimation2 {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  15% {
+    transform: translateY(-150px) rotate(20deg); /* זינוק גבוה עם הטיה למעלה */
+  }
+  40% {
+    transform: translateY(-100px) rotate(10deg); /* עדיין באוויר, מתאזן */
+  }
+  60% {
+    transform: translateY(-50px) rotate(5deg); /* לקראת נחיתה */
+  }
+  80% {
+    transform: translateY(5px) rotate(-2deg); /* נחיתה הדרגתית */
+  }
+  100% {
+    transform: translateY(0) rotate(0deg); /* נחיתה מלאה */
+  }
+}
+
+/* ============= TASK */
+#task-modal .modal-content {
+  width: 70% !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center ;
+  background-image: url('./assets/sign.png');
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: transparent;
+}
+
+.vehicles-container {
+  display: flex;
+  justify-content: space-evenly; /* ריווח אחיד בין כלי הרכב */
+  align-items: end;
+  gap: 10px; /* רווח קטן בין רכבים */
+  margin-top: 20px;
+  flex-wrap: nowrap; /* שמירה על שורה אחת */
+  overflow-x: auto; /* גלילה אופקית במקרה של עומס */
+  width: 100%;
+  padding-bottom: 20px;
+  padding-top: 119px;
+  margin-bottom: 20px;
+}
+
+.vehicles-container img {
+  flex: 1 1 auto; /* התאמה אוטומטית לגודל */
+  max-width: calc(100% / 5 - 10px); /* הגבלת רוחב כך שכולם ייכנסו במודל */
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.vehicles-container img:hover {
+  transform: scale(1.1);
+}
+/* אנימציה לנפילה */
+@keyframes fall {
+  0% {
+    transform: translateY(-100px);
+    opacity: 0; /* המילים לא ייראו בהתחלה */
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1; /* המילים יופיעו בהדרגה */
+  }
+}
+
+/* אנימציה להבהוב וגדילה */
+@keyframes flash {
+  0%, 100% {
+    color: white;
+    transform: scale(1);
+  }
+  50% {
+    color: #6c2c11;
+    transform: scale(1.2); /* גידול */
+  }
+}
+
+.flash {
+  animation: flash 1s 2;
+}
+
+#task-text {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  gap: 15px;
+  padding: 20px;
+  padding-bottom: 0;
+  border-radius: 15px;
+  color: #6c2c11;
+  max-width: 100%;
+  flex-wrap: wrap;
+  font-size: 3rem;
+  margin-bottom: 0;
+}
+.vehicle.shake {
+  animation: shake 0.6s ease-in-out infinite; /* הרטיטה תימשך באופן אינסופי */
+}
+
+#task-button {
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 99999;
+  height: 10vh;
+}
+
+#task-button img {
+  animation: zoomInOut 4s ease-in-out infinite;
+  cursor: pointer;
+  box-shadow:-2px -1px 7px 9px rgb(255 255 255 / 77%), 0 4px 6px -4px rgb(255 255 255 / 94%);
+  border-radius: 500px;
+  height: 100%;
+}
+
+
+/* ============== obstacle */
+.obstacle {
+  height: 80%;
+  position: absolute;
+  bottom: 20px;
 }

@@ -5,11 +5,14 @@ const WAIT_AFTER_WRONG_HIGHLIGHTS = 2000;
 const WAIT_AFTER_CORRECT_HIGHLIGHTS = 1000;
 const RESET_AFTER_SUCCESS_MATCH = 6000;
 const RESET_AFTER_WRONG_MATCH = 1000;
-const GAME_TIMER_MINUTES = 3;
+const GAME_TIMER_MINUTES = undefined;
 const WINS_FOR_GIFT = 2;
 const HAS_TIMER = false;
-const HAS_BG_MUSIC = false;
+const HAS_BG_MUSIC = true;
 // ====== CONSTANTS =====================================================
+
+const DELAY_AFTER_STEP_BEFORE_BUTTON_APPEAR = 2000;
+const ANIMATION_BEFORE_MOVE_DURATION = 6000;
 
 let isGameStarted = false;
 let isGameOver = false;
@@ -19,19 +22,53 @@ gameBgSound.loop = true;
 let wins = 0;
 
 const vehicles = [
-  { id: 1, pathId: "path-1", image: "assets/car.png", position: 0, speed: 2, type: "car" },
-  { id: 2, pathId: "path-2", image: "assets/track.png", position: 0, speed: 3, type: "truck" },
-  { id: 3, pathId: "path-3", image: "assets/bus.png", position: 0, speed: 2.5, type: "bus" },
-  { id: 4, pathId: "path-4", image: "assets/moto.png", position: 0, speed: 2, type: "motorcycle" },
+  { id: 1, pathId: "path-1", image: "assets/car.png", position: 0, speed: 2, type: "car", obstaclePosition: 46, steps: 7 },
+  { id: 2, pathId: "path-2", image: "assets/track.png", position: 0, speed: 3, type: "truck", obstaclePosition: 38, steps: 15 },
+  { id: 3, pathId: "path-3", image: "assets/tractor.png", position: 0, speed: 2.5, type: "bus", obstaclePosition: 70, steps: 10 },
+  { id: 4, pathId: "path-4", image: "assets/moto.png", position: 0, speed: 2, type: "motorcycle", obstaclePosition: 76, steps: 6 }
 ];
-const maxPoints = 10;
+const obstacles = vehicles.map(vehicle => {
+  const obstaclePosition = vehicle.obstaclePosition;
+  return {
+    vehicleId: vehicle.id,
+    position: obstaclePosition,
+    pathId: vehicle.pathId,
+    image: "assets/obstacle.png",
+  };
+});
 
+const tasks = [
+  "מצאו 5 פריטים בצבע אדום תוך 2 דקות.",
+  "פתרו חידת היגיון תוך 5 דקות.",
+  "סדרו 10 כוסות חד פעמיות בצורת פירמידה ב-30 שניות.",
+  "זכרו וחיזרו על סדרת מספרים ארוכה ככל האפשר.",
+  "המציאו שיר קצר על הקבוצה שלכם והציגו אותו.",
+  "זהו כמה שיותר שירים לפי 10 שניות מהפזמון שלהם.",
+  "רשמו 10 בעלי חיים שמתחילים באות מסוימת.",
+  "ענו על שאלת טריוויה שקשורה למקום התחרות.",
+  "הכינו פסל קטן מבלונים או מחומרים זמינים במקום.",
+  "ציירו תמונה משותפת של נושא מסוים, כשכל חבר בתורו מצייר פרט.",
+  "מצאו שלושה פריטים שמתחילים באותה אות והביאו אותם.",
+  "הכינו רשימה של 10 מדינות וציינו מאכל לאומי לכל מדינה.",
+  "בנו מגדל מקשיות שתייה שיחזיק לפחות 10 שניות.",
+  "פתרו תשבץ מיוחד שקשור לתחרות.",
+  "ענו על כמה שיותר שאלות מתוך חידון זריז של דקה.",
+  "הכינו ריקוד קצר ובצעו אותו מול כולם.",
+  "זהו 5 חפצים מתוך שקית מבלי להוציא אותם, רק באמצעות מישוש.",
+  "מצאו שם חיבה מצחיק לכל אחד מחברי הקבוצה.",
+  "בנו סיפור קצר על נושא אקראי תוך שימוש ב-10 מילים נתונות מראש.",
+  "כתבו ובצעו פרסומת קצרה למוצר דמיוני שאתם ממציאים."
+];
 
 let firstChoosenCard = null;
 let canClick = true;
 
 const brushAnimationsStack = [];
 const gameSounds = [];
+
+// ------------------------- SELECTORS -------------------------
+const START_BUTTON = () => document.getElementById('task-button');
+const TASK_MODAL = () => document.getElementById('task-modal');
 
 // ------------------------- BUILD GAME BOARD -------------------------
 async function initStartContainer() {
@@ -62,11 +99,18 @@ async function initStartContainer() {
 
 function initializeGame() {
   if (isGameStarted) return;
-  isGameStarted = true;
   document.getElementsByClassName('board-container')[0].classList.remove('hidden');
-  initTimer();
   initializeVehicles();
-  
+
+  // לחיצה על כפתור המשימה
+  START_BUTTON().addEventListener('click', showTaskCard);
+}
+
+function initGameAfterClick() {
+  if (isGameStarted) return;
+  isGameStarted = true;
+
+  initTimer();
   if (HAS_BG_MUSIC) {
     gameBgSound.play();
   }
@@ -75,7 +119,7 @@ function initializeGame() {
 function initTimer() {
   if (!HAS_TIMER) return;
   
-  let timeInSeconds = GAME_TIMER_MINUTES * 60;
+  let timeInSeconds = GAME_TIMER_MINUTES ? GAME_TIMER_MINUTES * 60 : 0;
   
   function updateTimerDisplay(minutes, seconds) {
     const minuteElem = document.getElementById('minutes');
@@ -117,10 +161,10 @@ function initTimer() {
     updateTimerDisplay(minutes, seconds);
     
     // Decrement the time
-    timeInSeconds--;
+    GAME_TIMER_MINUTES ? timeInSeconds-- : timeInSeconds++;
     
     // Stop the timer when it reaches 0
-    if (timeInSeconds < 0) {
+    if (GAME_TIMER_MINUTES && timeInSeconds < 0) {
       clearInterval(timerInterval);
       updateTimerDisplay(0, 0); // Ensure it shows 00:00 at the end
       gameOver();
@@ -129,61 +173,143 @@ function initTimer() {
 }
 
 function initializeVehicles() {
+  obstacles.forEach((obstacle) => {
+    const path = document.getElementById(obstacle.pathId);
+    if (path) {
+      const img = document.createElement("img");
+      img.src = obstacle.image;
+      img.className = "obstacle";
+      img.id = `obstacle-${obstacle.id}`;
+      path.appendChild(img);
+      img.style.right = `${obstacle.position}%`;  // מיקום רנדומלי
+    }
+  });
+  
   vehicles.forEach((vehicle) => {
     const path = document.getElementById(vehicle.pathId);
     if (path) {
+      const vehicleContainer = document.createElement("div");
+      vehicleContainer.className = "vehicle";
+      vehicleContainer.id = `vehicle-${vehicle.id}`;
+
       const img = document.createElement("img");
+      img.className = "vehicle-img";
       img.src = vehicle.image;
-      img.className = "vehicle";
-      img.id = `vehicle-${vehicle.id}`;
-      path.appendChild(img);
+
+      const logo = document.createElement("div");
+      logo.className = "vehicle-logo";
+      const logoImg = document.createElement("img");
+      logoImg.src = 'assets/logo.png';
+      logo.appendChild(logoImg);
+      vehicleContainer.appendChild(logo);
+
+      vehicleContainer.appendChild(img);
+      path.appendChild(vehicleContainer);
       updateVehiclePosition(vehicle);
-      img.addEventListener('click', () => {
-        moveVehicle(vehicle.id);
-      });
     }
   });
 }
 
 // ------------------------- GAME EVENTS -------------------------------
-
 async function updateVehiclePosition(vehicle) {
   const speed = vehicle.position === 0 ? 0 : vehicle.speed;
+  // path
+  const path = document.getElementById(vehicle.pathId);
+  const pathWidth = path.offsetWidth;
+  // vehicle
   const img = document.getElementById(`vehicle-${vehicle.id}`);
-  if (img) {
-    const percentageStep = 100 / (maxPoints + 1);
-    const rightPosition = vehicle.position * percentageStep;
-    img.style.transitionDuration = `${speed}s`;
-    img.style.right = `${rightPosition}%`;
+  // obstacle
+  const obstacleElement = path.getElementsByClassName('obstacle')[0];
+  const obstacleRect = obstacleElement?.getBoundingClientRect();
+  const obstacleRight = pathWidth - obstacleRect.left - obstacleRect.width;
 
-    switch(vehicle.type) {
-      case "car":
-        img.classList.add('carAnimation');
-        break;
-      case "truck":
-        img.classList.add('truckAnimation');
-        break;
-      case "bus":
-        img.classList.add('busAnimation');
-        break;
-      case "motorcycle":
-        img.classList.add('motorcycleAnimation');
-        break;
-      default:
-        img.style.animation = '';
-        break;
-    }
-    img.style.animationDuration = `${speed}s`;
-    await delay(speed * 1000);
-    img.classList.remove('carAnimation', 'truckAnimation', 'busAnimation', 'motorcycleAnimation');
+  if (!img) return;
+
+  const percentageStep = 100 / (vehicle.steps + 1);
+  const percentageRightPosition = vehicle.position * percentageStep;
+  const pixelRightPosition = percentageRightPosition / 100 * (pathWidth - img.offsetWidth);
+  
+  let finalRightPosition = pixelRightPosition;
+
+  if ((finalRightPosition + img.offsetWidth) >= obstacleRight && vehicle.type !== 'motorcycle') {
+    finalRightPosition = (obstacleRight - img.offsetWidth) + 15;
+    vehicle.stucked = true;
+  }
+
+  img.style.transitionDuration = `${speed}s`;
+  img.style.right = `${finalRightPosition}px`;
+
+  await animateVehicle(img, vehicle, speed, false, vehicle.position > 0);
+  if (vehicle.stucked) {
+    playGameSound('horn');
   }
 }
 
-function moveVehicle(vehicleId) {
+async function animateVehicle(element, vehicle, speed = 1, infinite = false, needAnimateLogo = false) {
+  switch(vehicle.type) {
+    case "car":
+      element.classList.add('carAnimation');
+      break;
+    case "truck":
+      element.classList.add('truckAnimation');
+      break;
+    case "bus":
+      element.classList.add('busAnimation');
+      break;
+    case "motorcycle":
+      if (vehicle.position === vehicle.steps + 1) {
+        element.classList.add('motorcycleAnimation2');
+      } else {
+        element.classList.add('motorcycleAnimation');
+      }
+      break;
+    default:
+      element.style.animation = '';
+      break;
+  }
+  element.style.animationDuration = `${speed}s`;
+  
+  if (needAnimateLogo) {
+    animateLogo(element.querySelector('.vehicle-logo'));
+  }
+
+  await delay(speed * 1000);
+  element.classList.remove('carAnimation', 'truckAnimation', 'busAnimation', 'motorcycleAnimation', 'motorcycleAnimation2');
+  if (infinite || vehicle.stucked) {
+    setTimeout(() => {
+      animateVehicle(element, vehicle, speed, infinite);
+    }, vehicle.stucked ? 0 : 1000);
+  }
+}
+
+function animateLogo(logo) {
+  logo.style.opacity = '1';
+  logo.style.transform = 'scale(1)';
+
+  logo.classList.add('spin');
+
+  setTimeout(() => {
+    logo.classList.remove('spin');
+    logo.classList.add('flash');
+
+    setTimeout(() => {
+      logo.style.opacity = '0';
+      logo.style.transform = 'scale(0)';
+      logo.classList.remove('flash');
+    }, 1000);
+  }, 2000);
+}
+
+async function moveVehicle(vehicleId) {
   const vehicle = vehicles.find((v) => v.id === vehicleId);
-  if (vehicle && vehicle.position <= maxPoints) {
-    vehicle.position++;
-    updateVehiclePosition(vehicle);
+
+  if (vehicle && vehicle.position <= vehicle.steps) {
+    if (vehicle.type === 'motorcycle' && vehicle.position === vehicle.steps - 1) {
+      vehicle.position = vehicle.position + 2; 
+    } else {
+      vehicle.position++;
+    }
+    await updateVehiclePosition(vehicle);
   }
 }
 
@@ -207,24 +333,111 @@ async function gameOver() {
 
 
 // ------------------------ ACTIONS -----------------------------------
-function blink(elements, color) {
-  // Get the value of the CSS variable
-  const colorVar = getComputedStyle(document.body).getPropertyValue(`--color-${color}`);
+async function showTaskCard() {
+  playGameSound('tada');
+  await delay(1000);
 
-  elements.forEach(e => {
-    e.style.setProperty('--blink-color', colorVar);
-    e.classList.add('blink-bg-color');
+  const taskText = document.getElementById('task-text');
+  TASK_MODAL().classList.add('active');
+
+  hideElement(START_BUTTON());
+  const vehiclesContainer = document.querySelector('.vehicles-container');
+
+  const task = tasks.pop();
+  if (tasks.length === 0) {
+    START_BUTTON().remove();
+  }
+  
+  // text
+  taskText.innerHTML = '';
+  taskText.classList.remove('flash');
+  task.split(' ').forEach((word, index) => {
+    const span = document.createElement('span');
+    span.textContent = word;
+  
+    if (index !== task.split(' ').length - 1) {
+      span.textContent += ' ';
+    }
+  
+    span.style.display = 'inline-block'; // מאפשר אנימציות על המילה
+    span.style.opacity = 0; // הסתר את המילה בהתחלה
+    span.style.animation = `
+      fall 0.8s ${index * 0.3}s ease-out forwards
+    `;
+    taskText.appendChild(span);
   });
+  
+  const textAnimationDuration = task.split(' ').length * 300 + 800;
+  // vehicles
+  vehiclesContainer.innerHTML = '';
+  vehicles.forEach(async vehicle => {
+    const img = document.createElement('img');
+    img.classList.add('vehicle-button')
+    img.src = vehicle.image;
+    img.alt = vehicle.type;
+    img.style.opacity = 0;
+    img.addEventListener('click', () => {
+      handleVehicleClick(vehicle)
+      TASK_MODAL().classList.remove('active');
+    });
+    vehiclesContainer.appendChild(img);
+
+    setTimeout(() => {
+      img.style.transition = `opacity ${textAnimationDuration / 1000}s ease`;
+      img.style.opacity = 1;
+    }, 10);
+
+    setTimeout(async () => {
+      await delay(Math.random() * 4 * 500);
+      animateVehicle(img, vehicle, 1, true);
+    }, textAnimationDuration);
+  });
+
+  await delay(textAnimationDuration);
+  taskText.classList.add('flash');
 }
 
-function stopBlink(elements) {
-  elements.forEach(e => e.classList.remove('blink-bg-color'));
+async function handleVehicleClick(vehicle) {
+  if (vehicle.stucked) {
+    playGameSound('horn', true, true);
+    await moveVehicle(vehicle.id);
+    showElement(START_BUTTON());
+    resetBgVolume();
+    return;
+  }
+
+  playGameSound('claps2');
+  const allVehicles = document.querySelectorAll('.vehicle, .obstacle');
+  allVehicles.forEach(v => {
+    v.style.transition = "all 1s ease";
+    v.style.opacity = 0.5;
+  });
+  const vehicleElement = document.getElementById(`vehicle-${vehicle.id}`);
+  vehicleElement.style.opacity = 1;
+
+  // animation before move
+  vehicleElement.style.transform = "scale(1.2)";
+  await delay(ANIMATION_BEFORE_MOVE_DURATION/4*3);
+  allVehicles.forEach(vehicle => {
+    vehicle.style.opacity = 1;
+  });
+  vehicleElement.style.transform = "scale(1)";
+  await delay(ANIMATION_BEFORE_MOVE_DURATION/4);
+
+  // move
+  vehicleElement.style.transition = "";
+  playGameSound('car-pass-by');
+  await moveVehicle(vehicle.id);
+  await delay(DELAY_AFTER_STEP_BEFORE_BUTTON_APPEAR);
+  showElement(START_BUTTON());
+  resetBgVolume();
 }
 
-async function playGameSound(type, pauseOther = true) {
+async function playGameSound(type, pauseOther = true, playTwice = false) {
   if (pauseOther) {
     gameSounds.forEach(sound => sound.pause());
   }
+  lowerBgVolume();
 
   let path = '';
   let volume = 0.3;
@@ -256,6 +469,18 @@ async function playGameSound(type, pauseOther = true) {
     case 'win':
       path = './sounds/win.mp3';
       break;
+    case 'tada':
+      path = './sounds/tada.mp3';
+      break;
+    case 'click':
+      path = './sounds/click3.mp3';
+      break;
+    case 'car-pass-by':
+      path = './sounds/car-pass-by.mp3';
+      break;
+    case 'horn':
+      path = './sounds/horn.mp3';
+      break;
     default:
       break;
   }
@@ -263,9 +488,21 @@ async function playGameSound(type, pauseOther = true) {
   var audio = new Audio(path);
   audio.volume = volume;
 
+  // Play the sound
   audio.play();
   gameSounds.push(audio);
-};
+
+  // If playTwice is true, play again after the first playback ends
+  if (playTwice) {
+    audio.addEventListener('ended', () => {
+      var secondAudio = new Audio(path);
+      secondAudio.volume = volume;
+      secondAudio.play();
+      gameSounds.push(secondAudio);
+      resetBgVolume();
+    });
+  }
+}
 
 function lowerBgVolume(volume = 0.3) {
   gameBgSound.volume = volume;
@@ -346,19 +583,50 @@ function getAnimationBrushId() {
   return id;
 }
 
-function goToSite() {
-  window.open('https://hashadchan.co.il/?utm_source=memory_game&utm_medium=site', '_blank');
-}
-
 function baseLayout() {
   if (!HAS_TIMER) {
     document.querySelector('.timer-container').remove();
   }
 }
 
+async function fallLetters(element, text) {
+  element.innerHTML = ''; // נקה את התוכן הקודם
+  // פצל את המשפט למילים
+  for (const word of text.split(' ')) {
+    const span = document.createElement('span');
+    span.textContent = word;
+  
+    span.style.display = 'inline-block'; // מאפשר אנימציות על המילה
+    span.style.opacity = 0; // הסתר את המילה בהתחלה
+    span.style.animation = `
+      fall 0.8s 0.3s ease-out forwards
+    `;
+    element.appendChild(span);
+    await delay(800);
+  }
+}
+
+function animateElement(element) {
+  element.classList.add('animated');
+}
+
+function removeElementAnimation(element) {
+  element.classList.remove('animated');
+}
+
+function hideElement(element) {
+  element.classList.add('hidden');
+}
+
+function showElement(element) {
+  element.classList.remove('hidden');
+}
+
 genereateBrushAnimations();
 baseLayout();
 
+initializeGame();
+
 document.addEventListener('click', () => {
-  initializeGame();
+  initGameAfterClick();
 })
