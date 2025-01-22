@@ -105,6 +105,10 @@
     opacity: 1; /* יותר הבהובים */
   }
 }
+.spin {
+  animation: spinAndFade 1.5s ease-in-out forwards; /* זמן קצר יותר */
+}
+
 .vehicle-logo.spin {
   animation: spinAndFade 1.5s ease-in-out forwards; /* זמן קצר יותר */
 }
@@ -275,8 +279,10 @@
 /* ============= TASK */
 #task-modal .modal-content, #winnerModal .modal-content {
   width: 70% !important;
+  min-height: 80vh;
   display: flex;
   flex-direction: column;
+  justify-content: space-around;
   align-items: center ;
   background-image: url('./assets/sign.png');
   background-size: 100% 100%;
@@ -345,7 +351,7 @@
   justify-content: center;
   display: flex;
   gap: 15px;
-  padding: 20px 50px;
+  padding: 40px 50px;
   padding-bottom: 0;
   border-radius: 15px;
   color: #6c2c11;
@@ -353,6 +359,11 @@
   flex-wrap: wrap;
   font-size: 3rem;
   margin-bottom: 0;
+}
+#task-text img {
+  height: 40vh;
+  border-radius: 24px;
+  margin-bottom: -100px;
 }
 .vehicle.shake {
   animation: shake 0.6s ease-in-out infinite; /* הרטיטה תימשך באופן אינסופי */

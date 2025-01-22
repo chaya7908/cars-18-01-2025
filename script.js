@@ -3,7 +3,7 @@ const WAIT_BEFORE_START_HIGHLIGHTS = 2500;
 const WAIT_BETWEEN_PROP_CHECK = 400;
 const WAIT_AFTER_WRONG_HIGHLIGHTS = 2000;
 const WAIT_AFTER_CORRECT_HIGHLIGHTS = 1000;
-const RESET_AFTER_SUCCESS_MATCH = 6000;
+const RESET_AFTER_SUCCESS_MATCH = 8000;
 const RESET_AFTER_WRONG_MATCH = 1000;
 const GAME_TIMER_MINUTES = undefined;
 const WINS_FOR_GIFT = 2;
@@ -12,7 +12,7 @@ const HAS_BG_MUSIC = true;
 // ====== CONSTANTS =====================================================
 
 const DELAY_AFTER_STEP_BEFORE_BUTTON_APPEAR = 2000;
-const ANIMATION_BEFORE_MOVE_DURATION = 5000;
+const ANIMATION_BEFORE_MOVE_DURATION = 4000;
 const REMOVE_STUCKED_VEHICLE = false;
 
 let isGameStarted = false;
@@ -39,28 +39,61 @@ const obstacles = vehicles.map(vehicle => {
 });
 
 const tasks = [
-  "כאן טקסט למשימה מספר 1",
-  "כאן טקסט למשימה מספר 2",
-  "כאן טקסט למשימה מספר 3",
-  "כאן טקסט למשימה מספר 4",
-  "כאן טקסט למשימה מספר 5",
-  "כאן טקסט למשימה מספר 6",
-  "כאן טקסט למשימה מספר 7",
-  "כאן טקסט למשימה מספר 8",
-  "כאן טקסט למשימה מספר 9",
-  "כאן טקסט למשימה מספר 10",
-  "כאן טקסט למשימה מספר 11",
-  "כאן טקסט למשימה מספר 12",
-  "כאן טקסט למשימה מספר 13",
-  "כאן טקסט למשימה מספר 14",
-  "כאן טקסט למשימה מספר 15",
-  "כאן טקסט למשימה מספר 16",
-  "כאן טקסט למשימה מספר 17",
-  "כאן טקסט למשימה מספר 18",
-  "כאן טקסט למשימה מספר 19",
-  "כאן טקסט למשימה מספר 20",
-  "כאן טקסט למשימה מספר 21",
-  "כאן טקסט למשימה מספר 22",
+  { question: "באיזה מחזור מספר תלמידות הקטן ביותר?", answer: "יב' - 137 תלמידות בלי עין הרע" },
+  {
+    question: "יורשת העצר זו מעלתה <br>כמספר יהודי בנות לוויתה<br>בשמה של אצבע אמצעית<br>נעשה שימוש בלי תוצאה וודאית",
+    answer: "בתיה בת פרעה המלך, 7 משרתות לה, באמה נעשה שימוש בלי הגיון שמשהו אכן יקרה, זכתה שנקרא משה בשם שהיא קראה לו."
+  },
+  { question: `<img src='assets/questions/q1.JPG' style='width: 100%;'>`, answer: "<img src='assets/questions/a1.JPG' style='width: 100%;'>" },
+  { question: `<img src='assets/questions/q2.JPG' style='width: 100%;'>`, answer: "<img src='assets/questions/a2.JPG' style='width: 100%;'>" },
+  { question: `<img src='assets/questions/q3.JPG' style='width: 100%;'>`, answer: "<img src='assets/questions/a3.JPG' style='width: 100%;'>" },
+  { question: `<img src='assets/questions/q4.JPG' style='width: 100%;'>`, answer: "<img src='assets/questions/a4.JPG' style='width: 100%;'>" },
+  { question: `<img src='assets/questions/q5.JPG' style='width: 100%;'>`, answer: "<img src='assets/questions/a5.JPG' style='width: 100%;'>" },
+  { question: `<img src='assets/questions/q6.JPG' style='width: 100%;'>`, answer: "<img src='assets/questions/a6.JPG' style='width: 100%;'>" },
+  {
+    question: "כמספר רגלים צעד בבטחה<br>לכבודו של מקום ימנע השליחה<br>ותהי משכורתו ברוכה<br>באימפריה של שליטה ומלוכה",
+    answer: "נבוכדנצאר, צעד 3 צעדים למנוע שליחת האגרת שהוזכר בו שמו של אלוקים בסוף, וזכה לשליטה בכל העולם ולשלוש דורות."
+  },
+  {
+    question: "הבאנה פסוקים הכוללים בתוכם את השורש ק.ט.נ. בכל נטייותיו הדקדוקיות.",
+    answer: `<div style="font-size: 26px;">"הקטן יהיה לאלף והצעיר לגוי עצום"<br>
+              "המאור הגדול...המאור הקטן לממשלת הלילה" בראשית.<br>
+              "יש לנו אב זקן וילד זקונים קטן" ויגש.<br>
+              "ברחל בתך הקטנה" ויצא.<br>
+              "שם הגדולה לאה ושם הקטנה רחל" (ויצא)<br>
+              "ואת גביעי גביע הכסף תשים בפי אמתחת הקטן" מקץ<br>
+              "ויחפש בגדול החל ובקטן כילה וימצא הגביע באמתחת בניימין" מקץ<br>
+              "ואולם אחיו הקטן יגדל ממנו"<br>
+              "למגדול ועד קטן" - מגילת אסתר<br>
+              "יברך... הקטנים עם הגדולים" - הלל.<br>
+              "קטונתי מכל החסדים ומכל האמת" וישלח<div>`
+  },
+  {
+    question: "מי הקטנה בכל מחזור?",
+    answer: `ט - מירי חריטן ט1<br>
+             י' - לאהלה הרשטיק - י1<br>
+             יא' - שרי שפרונג - יא3<br>
+             יב' - רייזי לנגנויאר - יב3`
+  },
+  {
+    question: "שלוש מאות וחמש הוא רדף<br>בחושבו שמא אולי נהדף<br>על כפיים ברחמים ובחמלה<br>זו זכותו להביא גאולה",
+    answer: "משה רבנו, 305=שה, רדף אחרי שה וסבור היה שמא תקפוהו, פגש אותו ליד מקווה המים והבין שהיה צמא על כן הרימו ברחמים וזכה להיות מנהיג ומושיע."
+  },
+  { question: "כמה קליין יש בסמינר?", answer: `<div style="font-size: 100px;">24<div>` },
+  { question: "א' זעירה בויקרא מה הטעם?", answer: "ויקר - דרך מקרה, שמשה לא רצה להתגאות שה' נגלה אליו" },
+  { question: "באיזו מחזור מס' המוזינקאלאך גדול ביותר?", answer: "מחזור ט' עם 16 מוז'ינקאלאך" },
+  {
+    question: "כמניין הכוסות זלגו העיניים<br>על מי ששיכלה פעמיים<br>בגפה, לבדה, נותרה בירכתיים<br>ובגבורה נאזרו חלציה בינתיים",
+    answer: "עורפה, הוזילה 4 דמעות בפרידתה מנעמי ששיכלה שני בנים, נותרה לבדה וזכתה שמצאצאיה יצאו ארבעה גיבורים, סף, מדין, גלית, ישבי."
+  },
+  {
+    question: "בפרשת חיי שרה כתובה המילה לבכותה בכ' זעירה, מהו הטעם לכך?",
+    answer: "שלא בכה אלא מעט לפי שזקנה היתה."
+  },
+  { question: "כיתה שענו בה הכי הרבה אמנים על ברכות השחר מהבוקר.", answer: `<div style="font-size: 100px;" class='spin'>💫</div>` },
+  { question: "כיתה שיש בה הכי הרבה בנות שאומרות עלינו לשבח מילה במילה מהחל ועד כלה מתוך הסידור בעמידה.", answer: `<div style="font-size: 100px;" class='spin'>💫</div>` },
+  { question: "כמה בנות בכיתה מקיימות את המצווה העתיקה של קימה לכבוד ההורים בכניסתם לבית.", answer: `<div style="font-size: 100px;" class='spin'>💫</div>` },
+  { question: "כיתה שיש בה הכי הרבה בנות שמקפידות ללמוד 2 הלכות מידי יום בכל תחום שהוא.", answer: `<div style="font-size: 100px;" class='spin'>💫</div>` },
 ].reverse();
 
 let firstChoosenCard = null;
@@ -343,6 +376,7 @@ async function showWinner(vehicle) {
   await delay(4000);
   vehicleElement.classList.remove('vehicleDance');
   WINNER_MODAL().classList.add('active');
+  hideElement(START_BUTTON());
 }
 
 // ------------------------- LOGIC ------------------------------------
@@ -359,31 +393,33 @@ async function showTaskCard() {
   hideElement(START_BUTTON());
   const vehiclesContainer = document.querySelector('.vehicles-container');
 
-  const task = tasks.pop();
+  const { question, answer } = tasks.pop();
   if (tasks.length === 0) {
     START_BUTTON().remove();
   }
   
   // text
-  taskText.innerHTML = '';
+  taskText.innerHTML = question;
   taskText.classList.remove('flash');
-  task.split(' ').forEach((word, index) => {
-    const span = document.createElement('span');
-    span.textContent = word;
+
+
+  // task.split(' ').forEach((word, index) => {
+  //   const span = document.createElement('span');
+  //   span.textContent = word;
   
-    if (index !== task.split(' ').length - 1) {
-      span.textContent += ' ';
-    }
+  //   if (index !== task.split(' ').length - 1) {
+  //     span.textContent += ' ';
+  //   }
   
-    span.style.display = 'inline-block'; // מאפשר אנימציות על המילה
-    span.style.opacity = 0; // הסתר את המילה בהתחלה
-    span.style.animation = `
-      fall 0.8s ${index * 0.3}s ease-out forwards
-    `;
-    taskText.appendChild(span);
-  });
+  //   span.style.display = 'inline-block'; // מאפשר אנימציות על המילה
+  //   span.style.opacity = 0; // הסתר את המילה בהתחלה
+  //   span.style.animation = `
+  //     fall 0.8s ${index * 0.3}s ease-out forwards
+  //   `;
+  //   taskText.appendChild(span);
+  // });
   
-  const textAnimationDuration = task.split(' ').length * 300 + 800;
+  const textAnimationDuration = 0; //task.split(' ').length * 300 + 800;
   // vehicles
   vehiclesContainer.innerHTML = '';
   vehicles.filter(v => !REMOVE_STUCKED_VEHICLE || !v.stucked).forEach(async vehicle => {
@@ -392,7 +428,23 @@ async function showTaskCard() {
     img.src = vehicle.image;
     img.alt = vehicle.type;
     img.style.opacity = 0;
-    img.addEventListener('click', () => {
+    img.addEventListener('click', async () => {
+      document.querySelectorAll('.vehicles-container img').forEach(e => {
+        e.style.animation = 'none';
+        e.style.opacity = 0.3;
+      });
+      img.style.animation = '';
+      img.style.opacity = 1;
+      playGameSound('claps2')
+
+      taskText.style.visibility = 'hidden';
+      taskText.classList.remove('flash');
+      await delay(1000);
+      taskText.style.visibility = 'visible';
+      taskText.classList.add('flash');
+      taskText.innerHTML = answer;
+      await delay(RESET_AFTER_SUCCESS_MATCH);
+
       handleVehicleClick(vehicle)
       TASK_MODAL().classList.remove('active');
     });
