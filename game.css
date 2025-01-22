@@ -284,6 +284,9 @@
   background-repeat: no-repeat;
   background-color: transparent;
 }
+#winnerModal .modal-content {
+  background-image: url('./assets/win.png');
+}
 
 .vehicles-container {
   display: flex;
@@ -416,10 +419,12 @@
 }
 
 #winnerModal .winner-text {
-  font-size: 4rem;
+  font-size: 95px;
   font-weight: bold;
-  color: #FF5733;
-  animation: textFlash 1.5s ease-in-out infinite;
+  color: var(--color-yellow);
+  animation: textFlash 1.5s ease-in-out infinite, zoomInOut 4s ease-in-out infinite;
+  stroke: white;
+  -webkit-text-stroke: 2px #ffffff;
 }
 
 @keyframes bounceIn {
@@ -438,10 +443,10 @@
 
 @keyframes textFlash {
   0%, 100% {
-    color: #FF5733;
+    color: #b8205d;
   }
   50% {
-    color: #FFC300;
+    color: var(--color-yellow);
   }
 }
 
