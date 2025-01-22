@@ -1,1 +1,0 @@
-# hashadchan-pairs-game

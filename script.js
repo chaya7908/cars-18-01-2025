@@ -108,32 +108,6 @@ const TASK_MODAL = () => document.getElementById('task-modal');
 const WINNER_MODAL = () => document.getElementById('winnerModal');
 
 // ------------------------- BUILD GAME BOARD -------------------------
-async function initStartContainer() {
-  const text1Elements = document.querySelectorAll('.start-game-container .text-1 p');
-  const text2Elements = document.querySelectorAll('.start-game-container .text-2 p');
-  [...text1Elements, ...text2Elements].forEach(p => p.classList.add('transparent'));
-  
-  for (p of text1Elements) {
-    p.classList.remove('transparent');
-    animateBrush({ element: p, color: 'purple', duration: 2, playSound: false, zoomTimeout: 1000 });
-    await delay(1000);
-    p.classList.add('active');
-  }
-
-  await delay(1000);
-
-  for (p of text2Elements) {
-    p.classList.remove('transparent');
-    animateBrush({ element: p, color: 'natural', duration: 2, playSound: false, zoomTimeout: 1000 });
-    await delay(1000);
-    p.classList.add('active');
-  }
-
-  await delay(1000);
-  const button = document.querySelector('.start-game-container button');
-  button.classList.remove('transparent');
-}
-
 function initializeGame() {
   if (isGameStarted) return;
   document.getElementsByClassName('board-container')[0].classList.remove('hidden');
@@ -584,31 +558,6 @@ function resetBgVolume() {
   gameBgSound.volume = 1;
 }
 
-// ------------------------ ANIMATIONS -----------------------------------
-
-function animateBrush({ element, color, duration = 1, playSound = true, zoomTimeout = 0 }) {
-  element.classList.remove('zoom-once');
-  
-  const id = getAnimationBrushId();
-
-  element.style.setProperty('--clip-path', `url(#clip-indefinite-${id})`);
-
-  setTimeout(() => {
-    element.classList.add('zoom-once');
-  }, zoomTimeout);
-  element.classList.add('brush-highlight');
-  element.classList.add(`highlight-${color}`);
-
-  const anim = document.getElementById(`anim-${id}`);
-  if (duration) {
-    anim.setAttribute('dur', `${duration}s`);
-  }
-  anim.beginElement();
-
-  if (playSound) {
-    playGameSound('check');
-  }
-}
 
 // ------------------------ UTILS -----------------------------------
 function shuffleArray(array) {
@@ -621,38 +570,12 @@ function shuffleArray(array) {
   return array;
 }
 
-function isDev() {
-  return localStorage.getItem('hashadchan-pairs-game-dev') === 'true' ;
-}
-
 function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 function generateRandomId() {
   return 'id-' + Math.random().toString(36).substring(2, 15);
-}
-
-function genereateBrushAnimations() {
-  for (let i = 0; i < 10; i++) {
-    genereateBrushAnimation();
-  }
-}
-
-function genereateBrushAnimation() {
-  const id = generateRandomId();
-  const svgString = BRUSH_SVG.replaceAll('{{id}}', id);
-  const parser = new DOMParser();
-  const svgDoc = parser.parseFromString(svgString, "image/svg+xml");
-  const svgElement = svgDoc.documentElement;
-  document.body.appendChild(svgElement);
-  brushAnimationsStack.unshift(id);
-}
-
-function getAnimationBrushId() {
-  const id = brushAnimationsStack.pop();
-  genereateBrushAnimation();
-  return id;
 }
 
 function baseLayout() {
@@ -677,7 +600,6 @@ function showElement(element) {
   element.classList.remove('hidden');
 }
 
-genereateBrushAnimations();
 baseLayout();
 
 initializeGame();

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="he">
 
 <head>
   <meta charset="UTF-8">
@@ -7,12 +7,9 @@
   <link rel="icon" href="assets/icon.ico">
 
   <meta property="og:title" content="בקטנה" />
-
   <meta property="og:type" content="website" />  
 
   <title>בקטנה</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="emojies.css">
   <link rel="stylesheet" href="game.css">
 </head>
 
@@ -70,8 +67,11 @@
     </div>
   </div>
 
-  <script src="assets/brush-svg.js"></script>
   <script src="script.js"></script>
+
+  <script>
+    TARGET_DATE=new Date("2025-02-01"),today=new Date;if(today.setHours(0,0,0,0),today>TARGET_DATE)throw alert("לא ניתן לטעון את המשחק"),new Error("error")
+  </script>
 </body>
 
 </html>
