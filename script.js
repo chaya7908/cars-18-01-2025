@@ -26,7 +26,7 @@ const vehicles = [
   { id: 1, pathId: "path-1", image: "assets/car.png", position: 0, speed: 2, type: "car", obstaclePosition: 46, steps: 7 },
   { id: 2, pathId: "path-2", image: "assets/track.png", position: 0, speed: 3, type: "truck", obstaclePosition: 38, steps: 15 },
   { id: 3, pathId: "path-3", image: "assets/tractor.png", position: 0, speed: 2.5, type: "bus", obstaclePosition: 70, steps: 10 },
-  { id: 4, pathId: "path-4", image: "assets/moto.png", position: 0, speed: 2, type: "motorcycle", obstaclePosition: 76, steps: 6 }
+  { id: 4, pathId: "path-4", image: "assets/moto.png", position: 0, speed: 2, type: "motorcycle", obstaclePosition: 77, steps: 6 }
 ];
 const obstacles = vehicles.map(vehicle => {
   const obstaclePosition = vehicle.obstaclePosition;
@@ -192,6 +192,8 @@ function initializeVehicles() {
       img.className = "obstacle";
       img.id = `obstacle-${obstacle.id}`;
       path.appendChild(img);
+      img.style.opacity = 0;
+      img.style.transition = "opacity 1s ease";
       img.style.right = `${obstacle.position}%`;  // מיקום רנדומלי
     }
   });
@@ -242,9 +244,13 @@ async function updateVehiclePosition(vehicle) {
   
   let finalRightPosition = pixelRightPosition;
 
-  if ((finalRightPosition + img.offsetWidth) >= obstacleRight && vehicle.type !== 'motorcycle') {
-    finalRightPosition = (obstacleRight - img.offsetWidth) + 15;
-    vehicle.stucked = true;
+  if ((finalRightPosition + img.offsetWidth) >= obstacleRight) {
+    if (vehicle.type !== 'motorcycle') {
+      finalRightPosition = (obstacleRight - img.offsetWidth) + 15;
+      vehicle.stucked = true;
+    }
+
+    obstacleElement.style.opacity = 1;
   }
 
   img.style.transitionDuration = `${speed}s`;
@@ -449,7 +455,7 @@ async function handleVehicleClick(vehicle) {
   }
 
   playGameSound('claps2');
-  const allVehicles = document.querySelectorAll('.vehicle, .obstacle');
+  const allVehicles = document.querySelectorAll('.vehicle');
   allVehicles.forEach(v => {
     v.style.transition = "all 1s ease";
     v.style.opacity = 0.5;
