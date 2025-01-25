@@ -39,11 +39,11 @@ const obstacles = vehicles.map(vehicle => {
 });
 
 const tasks = [
-  { question: "באיזה מחזור מספר תלמידות הקטן ביותר?", answer: "יב' - 137 תלמידות בלי עין הרע" },
   {
     question: "יורשת העצר זו מעלתה <br>כמספר יהודי בנות לוויתה<br>בשמה של אצבע אמצעית<br>נעשה שימוש בלי תוצאה וודאית",
     answer: "בתיה בת פרעה המלך, 7 משרתות לה, באמה נעשה שימוש בלי הגיון שמשהו אכן יקרה, זכתה שנקרא משה בשם שהיא קראה לו."
   },
+  ...shuffleArray([{ question: "באיזה מחזור מספר תלמידות הקטן ביותר?", answer: "יב' - 137 תלמידות בלי עין הרע" },
   { question: `<img src='assets/questions/q1.JPG' style='width: 100%;'>`, answer: "<img src='assets/questions/a1.JPG' style='width: 100%;'>" },
   { question: `<img src='assets/questions/q2.JPG' style='width: 100%;'>`, answer: "<img src='assets/questions/a2.JPG' style='width: 100%;'>" },
   { question: `<img src='assets/questions/q3.JPG' style='width: 100%;'>`, answer: "<img src='assets/questions/a3.JPG' style='width: 100%;'>" },
@@ -94,6 +94,28 @@ const tasks = [
   { question: "כיתה שיש בה הכי הרבה בנות שאומרות עלינו לשבח מילה במילה מהחל ועד כלה מתוך הסידור בעמידה.", answer: `<div style="font-size: 100px;" class='spin'>💫</div>` },
   { question: "כמה בנות בכיתה מקיימות את המצווה העתיקה של קימה לכבוד ההורים בכניסתם לבית.", answer: `<div style="font-size: 100px;" class='spin'>💫</div>` },
   { question: "כיתה שיש בה הכי הרבה בנות שמקפידות ללמוד 2 הלכות מידי יום בכל תחום שהוא.", answer: `<div style="font-size: 100px;" class='spin'>💫</div>` },
+  ]),
+  // שאלות חדשות
+  { question: "מיהו הנער הקטן שהפך למלך גדול?מיהו הנער הקטן שהפך למלך גדול?<br>א. דוד<br>ב. שאול<br>ג. שלמה<br>ד. יאשיהו", answer: `<div style="font-size: 100px;">יאשיהו</div>` },
+  { question: "איזו אבן קטנה שימשה את דוד להפלת גוליית הענק?<br>א. אבן שיש<br>ב. חלמיש<br>ג. אבן נחל<br>ד. אבן צור", answer: `<div style="font-size: 100px;">אבן נחל</div>` },
+  { question: "מי היה המלך הגבוה ביותר בעם ישראל?<br>א. דוד<br>ב. שאול<br>ג. שלמה<br>ד. ירבעם", answer: `<div style="font-size: 100px;">שאול</div>` },
+  { question: "מי היה הבן הצעיר ביותר של ישי שהפך למלך?<br>א. אבינדב<br>ב. אליאב<br>ג. דוד<br>ד. עמינדב", answer: `<div style="font-size: 100px;">דוד</div>` },
+  { question: "מי תואר כאיש קטן-קומה בתנ\"ך?<br>א. שמואל<br>ב. אליהו<br>ג. זכריהו<br>ד. אין אזכור ישיר לאיש קטן-קומה", answer: `<div style="font-size: 100px;">אין אזכור ישיר לאיש קטן-קומה</div>` },
+  { question: "מה היה גובהו של גוליית הפלישתי?<br>א. 4 אמות<br>ב. 6 אמות וזרת<br>ג. 7 אמות<br>ד. 5 אמות", answer: `<div style="font-size: 100px;">6 אמות וזרת</div>` },
+  { question: "איזה מלך קיבל ממלכה קטנה אך הרחיב אותה מאוד?<br>א. דוד<br>ב. שלמה<br>ג. עמרי<br>ד. ירבעם", answer: `<div style="font-size: 100px;">דוד</div>` },
+  { question: "על מי נאמר שהיה הקטן ביותר בבית אביו?<br>א. שמשון<br>ב. גדעון<br>ג. יפתח<br>ד. יואב", answer: `<div style="font-size: 100px;">גדעון</div>` },
+  { question: "איזה אוקיינוס הוא הגדול ביותר בעולם?<br>א. האוקיינוס ההודי<br>ב. האוקיינוס השקט<br>ג. האוקיינוס האטלנטי<br>ד. האוקיינוס הארקטי", answer: `<div style="font-size: 100px;">האוקיינוס השקט</div>` },
+  { question: "מהי המדינה הגדולה ביותר באירופה בשטחה?<br>א. גרמניה<br>ב. רוסיה<br>ג. אוקראינה<br>ד. צרפת", answer: `<div style="font-size: 100px;">רוסיה</div>` },
+  { question: "איזה נהר הוא הארוך ביותר בעולם?<br>א. האמזונס<br>ב. הנילוס<br>ג. המיסיסיפי<br>ד. היאנגצה", answer: `<div style="font-size: 100px;">הנילוס</div>` },
+  { question: "איזה מדבר הוא הגדול ביותר בעולם?<br>א. מדבר סהרה<br>ב. מדבר גובי<br>ג. מדבר האנטארקטיקה<br>ד. מדבר ערב", answer: `<div style="font-size: 100px;">מדבר האנטארקטיקה</div>` },
+  { question: "איזו יבשת היא הגדולה ביותר בשטח?<br>א. אסיה<br>ב. אפריקה<br>ג. דרום אמריקה<br>ד. צפון אמריקה", answer: `<div style="font-size: 100px;">אסיה</div>` },
+  { question: "מהי המדינה עם האוכלוסייה הגדולה ביותר?<br>א. הודו<br>ב. סין<br>ג. ארצות הברית<br>ד. אינדונזיה", answer: `<div style="font-size: 100px;">סין</div>` },
+  { question: "איזו יבשת היא הקטנה ביותר בשטח?<br>א. אירופה<br>ב. אוסטרליה<br>ג. דרום אמריקה<br>ד. אנטרקטיקה", answer: `<div style="font-size: 100px;">אוסטרליה</div>` },
+  { question: "איזו מהאפשרויות הבאות היא יחידת מידה קטנה מאוד?<br>א. מטר<br>ב. קילומטר<br>ג. ננומטר<br>ד. סנטימטר", answer: `<div style="font-size: 100px;">ננומטר</div>` },
+  { question: "איזה כוכב הוא הקטן ביותר במערכת השמש?<br>א. נוגה<br>ב. מאדים<br>ג. כוכב חמה<br>ד. פלוטו", answer: `<div style="font-size: 100px;">כוכב חמה</div>` },
+  { question: "מהי העיר הנמוכה ביותר בעולם?<br>א. אמסטרדם<br>ב. יריחו<br>ג. לה פאס<br>ד. אילת", answer: `<div style="font-size: 100px;">יריחו</div>` },
+  { question: "באיזה עיר בעולם נמצא הקהילה הכי גדולה של בעלזא", answer: `<div style="font-size: 100px;">אשדוד</div>` },
+  { question: "כמה ישיבות קטנות של בעלזא יש בארץ ישראל", answer: `<div style="font-size: 100px;">10</div>` }
 ].reverse();
 
 let firstChoosenCard = null;
@@ -365,10 +387,10 @@ async function showWinner(vehicle) {
 // ------------------------ ACTIONS -----------------------------------
 async function showTaskCard() {
   playGameSound('tada');
-  await delay(1000);
 
   const taskText = document.getElementById('task-text');
   TASK_MODAL().classList.add('active');
+  taskText.innerHTML = '';
 
   hideElement(START_BUTTON());
   const vehiclesContainer = document.querySelector('.vehicles-container');
@@ -567,8 +589,6 @@ function resetBgVolume() {
 
 // ------------------------ UTILS -----------------------------------
 function shuffleArray(array) {
-  if (isDev()) return array;
-
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
